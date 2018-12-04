@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" th:href="@{/css/bootstrap.min.css}">
+    <link rel="stylesheet" th:href="@{/css/template.css}">
+    <script th:src="@{/js/jquery-3.3.1.min.js}"></script>
+    <script th:src="@{/js/bootstrap.min.js}"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.14.0/jquery.validate.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.mask/1.14.15/jquery.mask.min.js"></script>
+    <script th:src="@{main.js}"></script>
+    <title>User</title>
+</head>
+<body>
+
+    <div class = "container">
+        <button type="button" class="btn btn-success nBtn">New</button>
+        <table class="table">
+            <thead>
+            <tr>
+                <th scope="col">Id</th>
+                <th scope="col">Name</th>
+                <th scope="col">Surname</th>
+                <th scope="col">Telephone Number</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="user :${users}">
+                <th th:text="${user.id}"></th>
+                <td th:text="${user.name}"></td>
+                <td th:text="${user.surname}"></td>
+                <td th:text="${user.phoneNumber}"></td>
+                <td><a th:href="@{findOne/(id=${user.id})}" class="btn btn-primary eBtn">Edit</a></td>
+                <td>
+                 <form th:method="delete" th:action="@{'/' + ${user.id} + '/delete'}">
+                 <button class="btn btn-danger" type="submit" onclick="myFunction()">Delete</button>
+                 </form>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+
+        <div  class ="modal-form">
+            <form th:action="@{/new}" method="post" id="newModalForm">
+            <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="exampleModalLabel">Update or Create</h5>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <div class="modal-body">
+                            <h4 id="alert-modal-title" class="modal-title"></h4>
+                                <div class="form-group">
+                                    <label for="id" class="col-form-label">Id:</label>
+                                    <input type="text" class="form-control" id="id" name="id" value="" readonly/>
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="name" class="col-form-label">Name:</label>
+                                    <input type="text" class="form-control" id="name" name="name" placeholder="name" value="" require/>
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="id" class="col-form-label">Surname:</label>
+                                    <input type="text" class="form-control" id="surname" name="surname" placeholder="surname" value=""/>
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="phoneNumber" class="col-form-label">Phone Number:</label>
+                                    <input type="text" class="form-control" id="phoneNumber" name="phoneNumber" placeholder="(537)-741-00-69" value=""/>
+                                </div>
+
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                            <button type="submit"  class="btn btn-primary" value ="save">Save</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            </form>
+        </div>
+        <script>
+            function myFunction() {
+                alert("!");
+            }
+
+            function deleteAll() {
+                $.ajax({
+                    type : "DELETE",
+                    url : "http://localhost:8080" + "/deleteAll",
+                    success: function(resultMsg){
+
+                        location.reload();
+                    },
+                    error : function(e) {
+                        alert("ERROR: ", e);
+                        console.log("ERROR: ", e);
+                    }
+                });
+            }
+        </script>
+        <button type="button" onclick="deleteAll()" class="btn danger">Delete</button>
+    </div>
+
+</body>
+</html>
